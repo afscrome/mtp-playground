@@ -10,7 +10,11 @@
     <PackageReference Include="Microsoft.Testing.Extensions.CrashDump" />
     <PackageReference Include="Microsoft.Testing.Extensions.HangDump" />
     <PackageReference Include="Microsoft.Testing.Extensions.TrxReport" />
-    <PackageReference Include="TUnit" />
+    <PackageReference Include="TUnit" />    
   </ItemGroup>
+
+  <PropertyGroup>
+    <TestingPlatformCommandLineArguments Condition="'$(GITHUB_ACTIONS)' == 'true'">--github-reporter-style full</TestingPlatformCommandLineArguments>
+  </PropertyGroup>
 
 </Project>
