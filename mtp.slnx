@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="mstestdemo/mstestdemo.csproj" />
+  <Project Path="nunitdemo/nunitdemo.csproj" />
+  <Project Path="tunitdemo/tunitdemo.csproj" />
+  <Project Path="xunitdemo/xunitdemo.csproj" />
+</Solution>
