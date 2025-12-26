@@ -2,13 +2,16 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
+    <TestingExtensionsProfile>AllMicrosoft</TestingExtensionsProfile>
   </PropertyGroup>
 
+<!-- MS Test sdk includes these by default based on TestingExtensionsProfile-->
+<!--
   <ItemGroup>
     <PackageReference Include="Microsoft.Testing.Extensions.CodeCoverage" />
     <PackageReference Include="Microsoft.Testing.Extensions.CrashDump" />
     <PackageReference Include="Microsoft.Testing.Extensions.HangDump" />
     <PackageReference Include="Microsoft.Testing.Extensions.TrxReport" />
   </ItemGroup>
-
+-->
 </Project>

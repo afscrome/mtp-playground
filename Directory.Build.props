@@ -7,6 +7,11 @@
   </PropertyGroup>
 
   <PropertyGroup>
+    <UseArtifactsOutput>true</UseArtifactsOutput>
+    <ArtifactOutputPath>$(MSBuildThisFileDirectory)/artifacts</ArtifactOutputPath>
+  </PropertyGroup>
+
+  <PropertyGroup>
     <TestingPlatformCommandLineArguments>$(TestingPlatformCommandLineArguments) --timeout 2m</TestingPlatformCommandLineArguments>
   </PropertyGroup>
 
@@ -24,9 +29,13 @@
     <ContinuousIntegrationBuild Condition="'$(GITHUB_ACTIONS)' == 'true'">true</ContinuousIntegrationBuild>
   </PropertyGroup>
 
+  <PropertyGroup>
+  </PropertyGroup>
+
   <PropertyGroup Condition="'$(ContinuousIntegrationBuild)' == 'true'">
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <TestingPlatformCommandLineArguments>$(TestingPlatformCommandLineArguments) --report-azdo --report-azdo-severity warning</TestingPlatformCommandLineArguments>
     <!--<CodeAnalysisTreatWarningsAsErrors>true</CodeAnalysisTreatWarningsAsErrors>-->
   </PropertyGroup>
 
