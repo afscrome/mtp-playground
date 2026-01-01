@@ -14,9 +14,9 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      BINLOG_PATH: ${{ github.workspace }}/.artifacts/binlogs
-      TESTRESULTS_PATH: ${{ github.workspace }}/.artifacts/testresults
-      COVERAGEREPORT_PATH: ${{ github.workspace }}/.artifacts/coveragereports
+      BINLOG_PATH: ${{ github.workspace }}/.artifacts/binlogs/
+      TESTRESULTS_PATH: ${{ github.workspace }}/.artifacts/testresults/
+      COVERAGEREPORT_PATH: ${{ github.workspace }}/.artifacts/coveragereports/
 
     steps:
       - uses: actions/checkout@v6
@@ -54,7 +54,7 @@ jobs:
         id: reportgenerator
         if: ${{ !cancelled() && steps.test.outcome != 'skipped' }}        
         with:
-          reports: '${{ env.TESTRESULTS_PATH }}*.coverage'
+          reports: '${{ env.TESTRESULTS_PATH }}/*.coverage'
           targetdir: ${{ env.COVERAGEREPORT_PATH }}
           reporttypes: HtmlInline_AzurePipelines;MarkdownSummaryGithub
 
