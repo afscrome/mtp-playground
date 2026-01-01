@@ -14,7 +14,9 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      TEST_RESULTS: ${{ github.workspace }}/.artifacts/test
+      BINLOG_PATH: ${{ runner.temp }}/binlogs
+      TESTRESULTS_PATH: ${{ runner.temp }}/testresults
+      COVERAGEREPORT_PATH: ${{ runner.temp }}/coveragereports
 
     steps:
       - uses: actions/checkout@v6
@@ -28,25 +30,44 @@ jobs:
           dotnet-version: 10.0.x
 
       - name: 📥 Restore dependencies
-        run: dotnet restore -bl:${{ env.TEST_RESULTS }}/restore.binlog
+        run: dotnet restore -bl:${{ env.BINLOG_PATH }}/restore.binlog
 
       - name: 🏗️ Build
-        run: dotnet build -bl:${{ env.TEST_RESULTS }}/build.binlog
+        run: dotnet build -bl:${{ env.BINLOG_PATH }}/build.binlog
 
-      - name: 🧪 Test
-        run: dotnet test -bl:${{ env.TEST_RESULTS }}/test.binlog --output Detailed --results-directory ${{ env.TEST_RESULTS }}
+      - id: test
+        name: 🧪 Test
+        run: dotnet test -bl:${{ env.BINLOG_PATH }}/test.binlog --output Detailed --results-directory ${{ env.TEST_RESULTS }}
 
       - name: 📄 Publish test results
         uses: dorny/test-reporter@v2
         if: ${{ !cancelled() }}
         with:
-          name: 'Test Results'
-          path: ' ${{ env.TEST_RESULTS }}/*.trx'
+          name: Test Results
+          path: ${{ env.TESTRESULTS_PATH }}/*.trx
           reporter: dotnet-trx
 
-      - name: 📤 Upload test artifacts
+      - name: 📤 Publish test artifacts
         uses: actions/upload-artifact@v6
-        if: ${{ !cancelled() }}
+        if: ${{ !cancelled() && steps.test.outcome != 'skipped' }}
         with:
           name: test-results
-          path: ${{ env.TEST_RESULTS }}
+          path: ${{ env.TESTRESULTS_PATH }}
+
+
+      - name: 📊 ReportGenerator
+        uses: danielpalme/ReportGenerator-GitHub-Action@v5
+        with:
+          reports: '*.coverage'
+          targetdir: ${{ env.COVERAGEREPORT_PATH }}
+          reporttypes: HtmlInline_AzurePipelines;MarkdownSummaryGithub
+
+      - name: 📝 Publish coverage summary
+        run: cat src/target/reports/coverage/SummaryGithub.md >> $GITHUB_STEP_SUMMARY
+        shell: bash
+  
+      - name: 📤 Publish code coverage results
+        uses: actions/upload-artifact@v4
+        with:
+          name: CoverageReport
+          path: ${{ env.COVERAGEREPORT_PATH }}         
