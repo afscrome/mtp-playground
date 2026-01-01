@@ -39,7 +39,7 @@ jobs:
         run: dotnet test -bl:${{ env.TEST_RESULTS }}/test.binlog --output Detailed --results-directory ${{ env.TEST_RESULTS }}
 
       - name: 📄 Publish test results
-        uses: dorny/test-reporter@v1
+        uses: dorny/test-reporter@v2
         if: ${{ !cancelled() }}
         with:
           name: 'Test Results'
