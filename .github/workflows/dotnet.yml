@@ -38,7 +38,7 @@ jobs:
         run: dotnet build -bl:${{ env.BINLOG_PATH }}/build.binlog
 
       - name: 🧪 Test
-        id: test      
+        id: test
         run: dotnet test -bl:${{ env.BINLOG_PATH }}/test.binlog --output Detailed --results-directory ${{ env.TESTRESULTS_PATH }}
 
       - name: 📄 Publish test results
@@ -54,7 +54,7 @@ jobs:
         id: reportgenerator
         if: ${{ !cancelled() && steps.test.outcome != 'skipped' }}        
         with:
-          reports: '*.coverage'
+          reports: '${{ env.TESTRESULTS_PATH }}*.coverage'
           targetdir: ${{ env.COVERAGEREPORT_PATH }}
           reporttypes: HtmlInline_AzurePipelines;MarkdownSummaryGithub
 
