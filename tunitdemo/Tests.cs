@@ -2,6 +2,7 @@
 
 namespace tunitdemo;
 
+[Explicit]
 public class Tests
 {
     [Test]

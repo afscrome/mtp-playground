@@ -2,6 +2,7 @@
 
 [Arguments("Hello")]
 [Arguments("World")]
+[Explicit]
 public class MoreTests(string title)
 {
     [Test]

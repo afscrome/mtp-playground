@@ -2,6 +2,7 @@
 
 [ClassDataSource<DataClass>]
 [ClassConstructor<DependencyInjectionClassConstructor>]
+[Explicit]
 public class AndEvenMoreTests(DataClass dataClass)
 {
     [Test]

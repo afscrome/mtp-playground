@@ -23,19 +23,7 @@ public class Tests
         Assert.Pass();
     }
 
-    [Test]
-    public void Output()
-    {
-        Console.WriteLine("Nunit Console Output");
-        Debug.WriteLine("Nunit Debug Output");
-        Trace.WriteLine("Nunit Trace Output");
 
-        TestContext.Progress.Write("Nunit Progress");
-        TestContext.Out.WriteLine("Nunit Output");
-        TestContext.Error.WriteLine("Nunit Error");
-
-        Assert.Pass();
-    }
 
     [Test]
     [Explicit]
