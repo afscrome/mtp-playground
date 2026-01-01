@@ -45,7 +45,7 @@
 
   <PropertyGroup>
     <TestingPlatformCommandLineArguments Condition="'$(ContinuousIntegrationBuild)' == 'true'">$(TestingPlatformCommandLineArguments) --timeout 2m</TestingPlatformCommandLineArguments>
-    <TestingPlatformCommandLineArguments Condition="'$(ContinuousIntegrationBuild)' == 'true'">$(TestingPlatformCommandLineArguments) --coverage</TestingPlatformCommandLineArguments>
+    <TestingPlatformCommandLineArguments Condition="'$(ContinuousIntegrationBuild)' == 'true'">$(TestingPlatformCommandLineArguments) --coverage --coverage-output-format cobertura</TestingPlatformCommandLineArguments>
     <TestingPlatformCommandLineArguments Condition="'$(ContinuousIntegrationBuild)' == 'true'">$(TestingPlatformCommandLineArguments) --report-trx</TestingPlatformCommandLineArguments>
     <TestingPlatformCommandLineArguments Condition="'$(ContinuousIntegrationBuild)' == 'true'">$(TestingPlatformCommandLineArguments) --crashdump --hangdump --hangdump-timeout 15m</TestingPlatformCommandLineArguments>
 

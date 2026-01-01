@@ -54,7 +54,7 @@ jobs:
         id: reportgenerator
         if: ${{ !cancelled() && steps.test.outcome != 'skipped' }}        
         with:
-          reports: '${{ env.TESTRESULTS_PATH }}/*.coverage'
+          reports: '${{ env.TESTRESULTS_PATH }}/*.cobertura.xml'
           targetdir: ${{ env.COVERAGEREPORT_PATH }}
           reporttypes: HtmlInline_AzurePipelines;MarkdownSummaryGithub
 
