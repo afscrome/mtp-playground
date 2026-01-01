@@ -1,10 +1,8 @@
-using System;
 using System.Diagnostics;
-using System.Threading.Tasks;
 
 namespace tunitdemo;
 
-public class OutputTests
+public class OutputLifecycleTests
 {
     [Before(Class)]
     public static void BeforeClass()

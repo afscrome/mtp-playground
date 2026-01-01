@@ -1,6 +1,6 @@
 using System.Diagnostics;
 
-public class OutputTests
+public class OutputLifecycleTests
 {
     [OneTimeSetUp]
     public static void OneTimeSetUp()

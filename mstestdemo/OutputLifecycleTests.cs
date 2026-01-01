@@ -1,12 +1,10 @@
-using System;
 using System.Diagnostics;
-using System.Threading.Tasks;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace mstestdemo;
 
+// Lifecycle docs: https://learn.microsoft.com/en-us/dotnet/core/testing/unit-testing-mstest-writing-tests-lifecycle
 [TestClass]
-public class OutputTests
+public class OutputLifecycleTests
 {
     public TestContext TestContext { get; set; }
 

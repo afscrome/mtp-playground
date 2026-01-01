@@ -1,4 +1,5 @@
 using System.Diagnostics;
+
 using Xunit.Runner.Common;
 using Xunit.Sdk;
 
@@ -8,10 +9,10 @@ using Xunit.Sdk;
 
 namespace xunitdemo;
 
-public sealed class OutputTests : IClassFixture<OutputTests.OutputFixture>, IDisposable
+public sealed class OutputLifecycleTests : IClassFixture<OutputLifecycleTests.OutputLifecycleFixture>, IDisposable
 {
     private readonly ITestOutputHelper _outputHelper;
-    public OutputTests(OutputFixture _, ITestOutputHelper outputHelper)
+    public OutputLifecycleTests(OutputLifecycleFixture _, ITestOutputHelper outputHelper)
     {
         _outputHelper = outputHelper;
 
@@ -58,36 +59,36 @@ public sealed class OutputTests : IClassFixture<OutputTests.OutputFixture>, IDis
         Trace.WriteLine("xUnit Test.Dispose Trace");
 
         _outputHelper.WriteLine("xUnit Test.Dispose TestOutputHelper");
-    }    
-
-public class OutputFixture : IDisposable
-{
-    private readonly IMessageSink _messageSink;
-
-    public OutputFixture(IMessageSink messageSink)
-    {
-        _messageSink = messageSink;
-        
-        Console.Out.WriteLine("xUnit Fixture.ctor Console.Out");
-        Console.Error.WriteLine("xUnit Fixture.ctor Console.Error");
-        Debug.WriteLine("xUnit Fixture.ctor Debug");
-        Trace.WriteLine("xUnit Fixture.ctor Trace");
-
-       TestContext.Current.TestOutputHelper?.WriteLine("xUnit Fixture.ctor TestOutputHelper");
-        _messageSink.OnMessage(new DiagnosticMessage("xUnit Fixture.ctor DiagnosticMessage"));
-     }
-
-    public void Dispose()
-    {
-        Console.Out.WriteLine("xUnit Fixture.Dispose Console.Out");
-        Console.Error.WriteLine("xUnit Fixture.Dispose Console.Error");
-        Debug.WriteLine("xUnit Fixture.Dispose Debug");
-        Trace.WriteLine("xUnit Fixture.Dispose Trace");
-
-       TestContext.Current.TestOutputHelper?.WriteLine("xUnit Fixture.Dispose TestOutputHelper");
-        _messageSink?.OnMessage(new DiagnosticMessage("xUnit Fixture.Dispose DiagnosticMessage"));
     }
-}
+
+    public class OutputLifecycleFixture : IDisposable
+    {
+        private readonly IMessageSink _messageSink;
+
+        public OutputLifecycleFixture(IMessageSink messageSink)
+        {
+            _messageSink = messageSink;
+
+            Console.Out.WriteLine("xUnit Fixture.ctor Console.Out");
+            Console.Error.WriteLine("xUnit Fixture.ctor Console.Error");
+            Debug.WriteLine("xUnit Fixture.ctor Debug");
+            Trace.WriteLine("xUnit Fixture.ctor Trace");
+
+            TestContext.Current.TestOutputHelper?.WriteLine("xUnit Fixture.ctor TestOutputHelper");
+            _messageSink.OnMessage(new DiagnosticMessage("xUnit Fixture.ctor DiagnosticMessage"));
+        }
+
+        public void Dispose()
+        {
+            Console.Out.WriteLine("xUnit Fixture.Dispose Console.Out");
+            Console.Error.WriteLine("xUnit Fixture.Dispose Console.Error");
+            Debug.WriteLine("xUnit Fixture.Dispose Debug");
+            Trace.WriteLine("xUnit Fixture.Dispose Trace");
+
+            TestContext.Current.TestOutputHelper?.WriteLine("xUnit Fixture.Dispose TestOutputHelper");
+            _messageSink?.OnMessage(new DiagnosticMessage("xUnit Fixture.Dispose DiagnosticMessage"));
+        }
+    }
 
 }
 

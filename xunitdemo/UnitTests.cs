@@ -1,5 +1,3 @@
-using System.Threading.Tasks;
-
 namespace xunitdemo;
 
 public class UnitTest1
