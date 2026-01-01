@@ -60,7 +60,7 @@ jobs:
 
       - name: 📝 Publish coverage summary
         if: ${{ !cancelled() && steps.reportgenerator.outcome == 'success' }}      
-        run: cat src/target/reports/coverage/SummaryGithub.md >> $GITHUB_STEP_SUMMARY
+        run: cat ${{ env.COVERAGEREPORT_PATH }}/SummaryGithub.md >> $GITHUB_STEP_SUMMARY
         shell: bash
   
       - name: 📤 Publish code coverage results
@@ -72,14 +72,14 @@ jobs:
 
       - name: 📤 Publish binlogs (on failure)
         uses: actions/upload-artifact@v6
-        if: ${{ steps.build.outcome == 'failure' || steps.restore.outcome == 'failure' || steps.test.outcome == 'failure'}}
+        if: ${{ steps.build.outcome == 'failure' || steps.restore.outcome == 'failure' || steps.test.outcome == 'failure' || runner.debug }}
         with:
-          name: TestResults-${{ github.job }}
-          path: ${{ env.TESTRESULTS_PATH }}
+          name: Binlogs-${{ github.job }}
+          path: ${{ env.BINLOG_PATH }}
 
       - name: 📤 Publish test artifacts (on failure)
         uses: actions/upload-artifact@v6
-        if: ${{ steps.test.outcome == 'failure' }}
+        if: ${{ steps.test.outcome == 'failure' || runner.debug }}
         with:
           name: TestResults-${{ github.job }}
           path: ${{ env.TESTRESULTS_PATH }}
