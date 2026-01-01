@@ -33,7 +33,7 @@ jobs:
         run: dotnet build -bl:${{ env.TEST_RESULTS }}/build.binlog
 
       - name: 🧪 Test
-        run: dotnet test -bl:${{ env.TEST_RESULTS }}/test.binlog
+        run: dotnet test -bl:${{ env.TEST_RESULTS }}/test.binlog --output Detailed
 
       - name: 📤 Upload test results
         uses: actions/upload-artifact@v4
