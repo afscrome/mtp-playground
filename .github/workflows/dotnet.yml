@@ -40,4 +40,4 @@ jobs:
         if: ${{ !cancelled() }}
         with:
           name: test-results
-          path: ${{runner.temp}}/test-results
+          path: $TEST_RESULTS
