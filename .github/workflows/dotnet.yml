@@ -8,18 +8,23 @@ on:
 
 jobs:
   build:
+    name: 🏗️ Build and test
 
     runs-on: ubuntu-latest
 
+    env:
+      TEST_RESULTS: ${{ github.workspace }}/.artifacts/test
+
     steps:
     - uses: actions/checkout@v4
-    - name: Setup .NET
+      name: 📋 Checkout code
+    - name: ⚙️ Setup .NET
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 10.0.x
-    - name: Restore dependencies
-      run: dotnet restore
-    - name: Build
-      run: dotnet build
-    - name: Test
-      run: dotnet test
+    - name: 📥 Restore dependencies
+      run: dotnet restore -bl:$TEST_RESULTS/restore.binlog
+    - name: 🏗️ Build
+      run: dotnet build -bl:$TEST_RESULTS/build.binlog
+    - name: 🧪 Test
+      run: dotnet test -bl:$TEST_RESULTS/test.binlog
