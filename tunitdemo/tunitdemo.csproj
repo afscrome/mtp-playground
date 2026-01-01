@@ -14,7 +14,7 @@
   </ItemGroup>
 
   <PropertyGroup>
-    <TestingPlatformCommandLineArguments Condition="'$(GITHUB_ACTIONS)' == 'true'">--github-reporter-style full</TestingPlatformCommandLineArguments>
+    <TestingPlatformCommandLineArguments Condition="'$(GITHUB_ACTIONS)' == 'true'">$(TestingPlatformCommandLineArguments) --github-reporter-style full</TestingPlatformCommandLineArguments>
   </PropertyGroup>
 
 </Project>

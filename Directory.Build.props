@@ -6,6 +6,10 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <!--
+    Use Artifact Path Layout 
+    https://learn.microsoft.com/en-us/dotnet/core/sdk/artifacts-output
+  -->
   <PropertyGroup>
     <UseArtifactsOutput>true</UseArtifactsOutput>
     <ArtifactsOutputPath>$(MSBuildThisFileDirectory)/artifacts</ArtifactsOutputPath>
@@ -22,10 +26,6 @@
     <TestingPlatformCommandLineArguments>$(TestingPlatformCommandLineArguments) --results-directory $(TestResultsDirectory)</TestingPlatformCommandLineArguments>
   </PropertyGroup>
 
-    <!--
-        Use Artifact Path Layout 
-        https://learn.microsoft.com/en-us/dotnet/core/sdk/artifacts-output
-    -->
   <PropertyGroup>
     <UseArtifactsOutput>true</UseArtifactsOutput>
     <ArtifactOutputPath>$(MSBuildThisFileDirectory).artifacts</ArtifactOutputPath>
@@ -34,9 +34,6 @@
   <PropertyGroup>
     <ContinuousIntegrationBuild Condition="'$(TF_BUILD)' == 'true'">true</ContinuousIntegrationBuild>
     <ContinuousIntegrationBuild Condition="'$(GITHUB_ACTIONS)' == 'true'">true</ContinuousIntegrationBuild>
-  </PropertyGroup>
-
-  <PropertyGroup>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(ContinuousIntegrationBuild)' == 'true'">
