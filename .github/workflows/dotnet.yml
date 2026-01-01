@@ -27,17 +27,17 @@ jobs:
           dotnet-version: 10.0.x
 
       - name: 📥 Restore dependencies
-        run: dotnet restore -bl:$TEST_RESULTS/restore.binlog
+        run: dotnet restore -bl:${{ env.TEST_RESULTS }}/restore.binlog
 
       - name: 🏗️ Build
-        run: dotnet build -bl:$TEST_RESULTS/build.binlog
+        run: dotnet build -bl:${{ env.TEST_RESULTS }}/build.binlog
 
       - name: 🧪 Test
-        run: dotnet test -bl:$TEST_RESULTS/test.binlog
+        run: dotnet test -bl:${{ env.TEST_RESULTS }}/test.binlog
 
       - name: 📤 Upload test results
         uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
         with:
           name: test-results
-          path: $TEST_RESULTS
+          path: ${{ env.TEST_RESULTS }}

@@ -12,23 +12,18 @@
   -->
   <PropertyGroup>
     <UseArtifactsOutput>true</UseArtifactsOutput>
-    <ArtifactsOutputPath>$(MSBuildThisFileDirectory)/artifacts</ArtifactsOutputPath>
+    <ArtifactsPath>$(MSBuildThisFileDirectory)/.artifacts</ArtifactsPath>
   </PropertyGroup>
 
   <PropertyGroup>
     <ArtifactsTestResultsOutputName>test</ArtifactsTestResultsOutputName>
-    <TestResultsDirectory>$(ArtifactsOutputPath)/$(ArtifactsTestResultsOutputName)/$(ArtifactsProjectName)/$(ArtifactsPivots)/</TestResultsDirectory>
+    <TestResultsDirectory>$(ArtifactsPath)/$(ArtifactsTestResultsOutputName)/$(ArtifactsProjectName)/$(ArtifactsPivots)/</TestResultsDirectory>
 
     <TestingPlatformCommandLineArguments>$(TestingPlatformCommandLineArguments) --timeout 2m</TestingPlatformCommandLineArguments>
     <TestingPlatformCommandLineArguments>$(TestingPlatformCommandLineArguments) --hangdump --hangdump-timeout 2m</TestingPlatformCommandLineArguments>
     <TestingPlatformCommandLineArguments>$(TestingPlatformCommandLineArguments) --crashdump</TestingPlatformCommandLineArguments>
     <TestingPlatformCommandLineArguments>$(TestingPlatformCommandLineArguments) --report-trx </TestingPlatformCommandLineArguments>
     <TestingPlatformCommandLineArguments>$(TestingPlatformCommandLineArguments) --results-directory $(TestResultsDirectory)</TestingPlatformCommandLineArguments>
-  </PropertyGroup>
-
-  <PropertyGroup>
-    <UseArtifactsOutput>true</UseArtifactsOutput>
-    <ArtifactOutputPath>$(MSBuildThisFileDirectory).artifacts</ArtifactOutputPath>
   </PropertyGroup>
 
   <PropertyGroup>
