@@ -30,23 +30,17 @@ jobs:
           dotnet-version: 10.0.x
 
       - name: 📥 Restore dependencies
+        id: restore
         run: dotnet restore -bl:${{ env.BINLOG_PATH }}/restore.binlog
 
       - name: 🏗️ Build
+        id: build
         run: dotnet build -bl:${{ env.BINLOG_PATH }}/build.binlog
 
-      - id: test
-        name: 🧪 Test
+      - name: 🧪 Test
+        id: test      
         run: dotnet test -bl:${{ env.BINLOG_PATH }}/test.binlog --output Detailed --results-directory ${{ env.TEST_RESULTS }}
 
-      - name: 📤 Publish test artifacts
-        uses: actions/upload-artifact@v6
-        if: ${{ !cancelled() && steps.test.outcome != 'skipped' }}
-        with:
-          name: TestResults-${{ github.job }}
-          path: ${{ env.TESTRESULTS_PATH }}
-
-          
       - name: 📄 Publish test results
         uses: dorny/test-reporter@v2
         if: ${{ !cancelled() && steps.test.outcome != 'skipped' }}
@@ -65,13 +59,27 @@ jobs:
           reporttypes: HtmlInline_AzurePipelines;MarkdownSummaryGithub
 
       - name: 📝 Publish coverage summary
-        if: ${{ !cancelled() && steps.reportgenerator.outcome != 'success' }}      
+        if: ${{ !cancelled() && steps.reportgenerator.outcome == 'success' }}      
         run: cat src/target/reports/coverage/SummaryGithub.md >> $GITHUB_STEP_SUMMARY
         shell: bash
   
       - name: 📤 Publish code coverage results
-        if: ${{ !cancelled() && steps.reportgenerator.outcome != 'success' }}      
+        if: ${{ !cancelled() && steps.reportgenerator.outcome == 'success' }}      
         uses: actions/upload-artifact@v6
         with:
           name: CoverageReport-${{ github.job }}
           path: ${{ env.COVERAGEREPORT_PATH }}         
+
+      - name: 📤 Publish binlogs (on failure)
+        uses: actions/upload-artifact@v6
+        if: ${{ steps.build.outcome == 'failure' || steps.restore.outcome == 'failure' || steps.test.outcome == 'failure'}}
+        with:
+          name: TestResults-${{ github.job }}
+          path: ${{ env.TESTRESULTS_PATH }}
+
+      - name: 📤 Publish test artifacts (on failure)
+        uses: actions/upload-artifact@v6
+        if: ${{ steps.test.outcome == 'failure' }}
+        with:
+          name: TestResults-${{ github.job }}
+          path: ${{ env.TESTRESULTS_PATH }}
