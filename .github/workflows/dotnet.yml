@@ -33,7 +33,7 @@ jobs:
         run: dotnet build -bl:${{ env.TEST_RESULTS }}/build.binlog
 
       - name: 🧪 Test
-        run: dotnet test -bl:${{ env.TEST_RESULTS }}/test.binlog --output Detailed
+        run: dotnet test -bl:${{ env.TEST_RESULTS }}/test.binlog --output Detailed --results-directory ${{ env.TEST_RESULTS }}
 
       - name: 📄 Publish test results
         uses: dorny/test-reporter@v1
