@@ -40,7 +40,7 @@ jobs:
         if: ${{ !cancelled() }}
         with:
           name: 'Test Results'
-          path: 'TestResults/*.trx'
+          path: ' ${{ env.TEST_RESULTS }}/*.trx'
           reporter: dotnet-trx
 
       - name: 📤 Upload test artifacts
