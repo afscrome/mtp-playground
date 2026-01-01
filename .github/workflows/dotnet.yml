@@ -14,9 +14,9 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      BINLOG_PATH: ${{ runner.temp }}/binlogs
-      TESTRESULTS_PATH: ${{ runner.temp }}/testresults
-      COVERAGEREPORT_PATH: ${{ runner.temp }}/coveragereports
+      BINLOG_PATH: ${{ github.workspace }}/.artifacts/binlogs
+      TESTRESULTS_PATH: ${{ github.workspace }}/.artifacts/testresults
+      COVERAGEREPORT_PATH: ${{ github.workspace }}/.artifacts/coveragereports
 
     steps:
       - uses: actions/checkout@v6
@@ -39,35 +39,39 @@ jobs:
         name: 🧪 Test
         run: dotnet test -bl:${{ env.BINLOG_PATH }}/test.binlog --output Detailed --results-directory ${{ env.TEST_RESULTS }}
 
+      - name: 📤 Publish test artifacts
+        uses: actions/upload-artifact@v6
+        if: ${{ !cancelled() && steps.test.outcome != 'skipped' }}
+        with:
+          name: TestResults-${{ github.job }}
+          path: ${{ env.TESTRESULTS_PATH }}
+
+          
       - name: 📄 Publish test results
         uses: dorny/test-reporter@v2
-        if: ${{ !cancelled() }}
+        if: ${{ !cancelled() && steps.test.outcome != 'skipped' }}
         with:
           name: Test Results
           path: ${{ env.TESTRESULTS_PATH }}/*.trx
           reporter: dotnet-trx
 
-      - name: 📤 Publish test artifacts
-        uses: actions/upload-artifact@v6
-        if: ${{ !cancelled() && steps.test.outcome != 'skipped' }}
-        with:
-          name: test-results
-          path: ${{ env.TESTRESULTS_PATH }}
-
-
       - name: 📊 ReportGenerator
         uses: danielpalme/ReportGenerator-GitHub-Action@v5
+        id: reportgenerator
+        if: ${{ !cancelled() && steps.test.outcome != 'skipped' }}        
         with:
           reports: '*.coverage'
           targetdir: ${{ env.COVERAGEREPORT_PATH }}
           reporttypes: HtmlInline_AzurePipelines;MarkdownSummaryGithub
 
       - name: 📝 Publish coverage summary
+        if: ${{ !cancelled() && steps.reportgenerator.outcome != 'success' }}      
         run: cat src/target/reports/coverage/SummaryGithub.md >> $GITHUB_STEP_SUMMARY
         shell: bash
   
       - name: 📤 Publish code coverage results
-        uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() && steps.reportgenerator.outcome != 'success' }}      
+        uses: actions/upload-artifact@v6
         with:
-          name: CoverageReport
+          name: CoverageReport-${{ github.job }}
           path: ${{ env.COVERAGEREPORT_PATH }}         
