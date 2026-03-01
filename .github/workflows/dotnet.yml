@@ -8,6 +8,10 @@ on:
         required: false
         default: 'Release'
         type: string
+      version:
+        description: 'Package/application version'
+        required: true
+        type: string
       os:
         description: 'Operating system to run on'
         required: false
@@ -53,14 +57,16 @@ jobs:
         run: |
           dotnet restore \
             --artifacts-path ${{ env.ARTIFACTS_PATH }} \
+            -p:Version=${{ inputs.version }} \
             -bl:${{ env.BINLOG_PATH }}/restore.binlog
 
       - name: 🏗️ Build
         id: build
         run: |
           dotnet build \
-            --configuration ${{ inputs.configuration }} \
             --no-restore \
+            --configuration ${{ inputs.configuration }} \
+            -p:Version=${{ inputs.version }} \
             --artifacts-path ${{ env.ARTIFACTS_PATH }} \
             -bl:${{ env.BINLOG_PATH }}/build.binlog
 
@@ -68,8 +74,9 @@ jobs:
         id: test
         run: |
           dotnet test \
-            --configuration ${{ inputs.configuration }} \
             --no-build \
+            --configuration ${{ inputs.configuration }} \
+            -p:Version=${{ inputs.version }} \
             --p:ArtifactsPath=${{ env.ARTIFACTS_PATH }} \
             -bl:${{ env.BINLOG_PATH }}/test.binlog \
             --output Detailed \
