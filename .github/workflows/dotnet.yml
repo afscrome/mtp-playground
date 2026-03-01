@@ -3,6 +3,13 @@ name: .NET
 on:
   push:
   pull_request:
+  workflow_dispatch:
+    inputs:
+      configuration:
+        description: 'Build configuration'
+        required: false
+        default: 'Release'
+        type: string
 
 permissions:
   checks: write
@@ -14,9 +21,10 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      BINLOG_PATH: ${{ github.workspace }}/.artifacts/binlogs/
-      TESTRESULTS_PATH: ${{ github.workspace }}/.artifacts/testresults/
-      COVERAGEREPORT_PATH: ${{ github.workspace }}/.artifacts/coveragereports/
+      ARTIFACTS_PATH: ${{ github.workspace }}/.artifacts
+      BINLOG_PATH: ${{ env.ARTIFACTS_PATH }}/binlogs/
+      TESTRESULTS_PATH: ${{ env.ARTIFACTS_PATH }}/testresults/
+      COVERAGEREPORT_PATH: ${{ env.ARTIFACTS_PATH }}/coveragereports/
 
     steps:
       - uses: actions/checkout@v6
@@ -29,17 +37,25 @@ jobs:
         with:
           dotnet-version: 10.0.x
 
+      - name: � Cache NuGet packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('global.json', '**/*.props', '**/*.targets', '**/*.csproj') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
+
       - name: 📥 Restore dependencies
         id: restore
-        run: dotnet restore -bl:${{ env.BINLOG_PATH }}/restore.binlog
+        run: dotnet restore --artifacts-path ${{ env.ARTIFACTS_PATH }} -bl:${{ env.BINLOG_PATH }}/restore.binlog
 
       - name: 🏗️ Build
         id: build
-        run: dotnet build -bl:${{ env.BINLOG_PATH }}/build.binlog
+        run: dotnet build --configuration ${{ inputs.configuration }} --no-restore --artifacts-path ${{ env.ARTIFACTS_PATH }} -bl:${{ env.BINLOG_PATH }}/build.binlog
 
       - name: 🧪 Test
         id: test
-        run: dotnet test -bl:${{ env.BINLOG_PATH }}/test.binlog --output Detailed --results-directory ${{ env.TESTRESULTS_PATH }}
+        run: dotnet test --configuration ${{ inputs.configuration }} --no-build --artifacts-path ${{ env.ARTIFACTS_PATH }} -bl:${{ env.BINLOG_PATH }}/test.binlog --output Detailed --results-directory ${{ env.TESTRESULTS_PATH }}
 
       - name: 📄 Publish test results
         uses: dorny/test-reporter@v2
@@ -56,15 +72,15 @@ jobs:
         with:
           reports: '${{ env.TESTRESULTS_PATH }}/*.cobertura.xml'
           targetdir: ${{ env.COVERAGEREPORT_PATH }}
-          reporttypes: HtmlInline_AzurePipelines;MarkdownSummaryGithub
+          reporttypes: HTML;MarkdownSummaryGithub
 
       - name: 📝 Publish coverage summary
-        if: ${{ !cancelled() && steps.reportgenerator.outcome == 'success' }}      
+        if: ${{ steps.reportgenerator.outcome == 'success' }}      
         run: cat ${{ env.COVERAGEREPORT_PATH }}/SummaryGithub.md >> $GITHUB_STEP_SUMMARY
         shell: bash
   
       - name: 📤 Publish code coverage results
-        if: ${{ !cancelled() && steps.reportgenerator.outcome == 'success' }}      
+        if: ${{ steps.reportgenerator.outcome == 'success' }}      
         uses: actions/upload-artifact@v6
         with:
           name: CoverageReport-${{ github.job }}
@@ -72,7 +88,7 @@ jobs:
 
       - name: 📤 Publish binlogs (on failure)
         uses: actions/upload-artifact@v6
-        if: ${{ steps.build.outcome == 'failure' || steps.restore.outcome == 'failure' || steps.test.outcome == 'failure' || runner.debug }}
+        if: ${{ steps.restore.outcome == 'failure' || steps.build.outcome == 'failure' || steps.test.outcome == 'failure' || runner.debug }}
         with:
           name: Binlogs-${{ github.job }}
           path: ${{ env.BINLOG_PATH }}
