@@ -7,6 +7,7 @@
 
   <ItemGroup>
     <PackageReference Include="GitHubActionsTestLogger" />
+    <PackageReference Include="Microsoft.Testing.Extensions.AzureDevOpsReport" VersionOverride="2.1.0" />
   </ItemGroup>
 
 <!-- MS Test sdk includes these by default based on TestingExtensionsProfile-->
