@@ -21,10 +21,10 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      ARTIFACTS_PATH: ${{ github.workspace }}/.artifacts
-      BINLOG_PATH: ${{ env.ARTIFACTS_PATH }}/binlogs/
-      TESTRESULTS_PATH: ${{ env.ARTIFACTS_PATH }}/testresults/
-      COVERAGEREPORT_PATH: ${{ env.ARTIFACTS_PATH }}/coveragereports/
+      ARTIFACTS_PATH: ${{ github.workspace }}/.artifacts/
+      BINLOG_PATH: ${{ github.workspace }}/.artifacts/binlogs/
+      TESTRESULTS_PATH: ${{ github.workspace }}/.artifacts/testresults/
+      COVERAGEREPORT_PATH: ${{ github.workspace }}/.artifacts/coveragereports/
 
     steps:
       - uses: actions/checkout@v6
