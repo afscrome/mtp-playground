@@ -32,6 +32,7 @@ jobs:
       BINLOG_PATH: ${{ github.workspace }}/.artifacts/binlogs/
       TESTRESULTS_PATH: ${{ github.workspace }}/.artifacts/testresults/
       COVERAGEREPORT_PATH: ${{ github.workspace }}/.artifacts/coveragereports/
+      NUGET_XMLDOC_MODE: skip
 
     steps:
       - uses: actions/checkout@v6
