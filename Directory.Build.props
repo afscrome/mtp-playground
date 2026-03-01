@@ -43,13 +43,14 @@
     <ContinuousIntegrationBuild Condition="'$(JB_SPACE_API_URL)' != '' AND '$(ContinuousIntegrationBuild)' != 'true'">true</ContinuousIntegrationBuild>
   </PropertyGroup>
 
-  <PropertyGroup>
-    <TestingPlatformCommandLineArguments Condition="'$(ContinuousIntegrationBuild)' == 'true'">$(TestingPlatformCommandLineArguments) --timeout 2m</TestingPlatformCommandLineArguments>
-    <TestingPlatformCommandLineArguments Condition="'$(ContinuousIntegrationBuild)' == 'true'">$(TestingPlatformCommandLineArguments) --coverage --coverage-output-format cobertura</TestingPlatformCommandLineArguments>
-    <TestingPlatformCommandLineArguments Condition="'$(ContinuousIntegrationBuild)' == 'true'">$(TestingPlatformCommandLineArguments) --report-trx</TestingPlatformCommandLineArguments>
-    <TestingPlatformCommandLineArguments Condition="'$(ContinuousIntegrationBuild)' == 'true'">$(TestingPlatformCommandLineArguments) --crashdump --hangdump --hangdump-timeout 15m</TestingPlatformCommandLineArguments>
+  <PropertyGroup Condition="'$(ContinuousIntegrationBuild)' == 'true'">
+    <TestingPlatformCommandLineArguments>$(TestingPlatformCommandLineArguments) --timeout 2m</TestingPlatformCommandLineArguments>
+    <TestingPlatformCommandLineArguments>$(TestingPlatformCommandLineArguments) --coverage --coverage-output-format cobertura</TestingPlatformCommandLineArguments>
+    <TestingPlatformCommandLineArguments>$(TestingPlatformCommandLineArguments) --report-trx</TestingPlatformCommandLineArguments>
+    <TestingPlatformCommandLineArguments>$(TestingPlatformCommandLineArguments) --crashdump --hangdump --hangdump-timeout 15m</TestingPlatformCommandLineArguments>
 
     <TestingPlatformCommandLineArguments Condition="'$(TF_BUILD)' == 'true'">--report-azdo --report-azdo-severity warning</TestingPlatformCommandLineArguments>
+    <TestingPlatformCommandLineArguments Condition="'$(GITHUB_ACTIONS)' == 'true'">$(TestingPlatformCommandLineArguments) --report-github</TestingPlatformCommandLineArguments>
   </PropertyGroup>
 
   <!-- Strict error / style handling on builds -->

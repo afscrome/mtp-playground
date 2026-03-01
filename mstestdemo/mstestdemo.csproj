@@ -5,6 +5,10 @@
     <TestingExtensionsProfile>AllMicrosoft</TestingExtensionsProfile>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="GitHubActionsTestLogger" />
+  </ItemGroup>
+
 <!-- MS Test sdk includes these by default based on TestingExtensionsProfile-->
 <!--
   <ItemGroup>
