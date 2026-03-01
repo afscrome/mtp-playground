@@ -1,0 +1,21 @@
+name: .NET
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      configuration:
+        description: 'Build configuration'
+        required: false
+        default: 'Release'
+        type: string
+
+permissions:
+  checks: write
+
+jobs:
+  build:
+    uses: ./.github/workflows/dotnet.yml
+    with:
+      configuration: ${{ inputs.configuration || 'Release' }}
