@@ -5,7 +5,7 @@ run-name: >-
     github.event_name == 'pull_request'
       && format('-pr{0}', github.event.pull_request.number)
       || github.ref_type == 'branch'
-      && format('-{0}', replace(github.ref_name, '/', '-'))
+      && format('-alpha+branch.{0}', github.ref_name)
       || ''
   }}
 
