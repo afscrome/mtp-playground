@@ -24,10 +24,10 @@ jobs:
     runs-on: ${{ inputs.os }}
 
     env:
-      ARTIFACTS_PATH: ${{ github.workspace }}/.artifacts2/
-      BINLOG_PATH: ${{ github.workspace }}/.artifacts2/binlogs/
-      TESTRESULTS_PATH: ${{ github.workspace }}/.artifacts2/testresults/
-      COVERAGEREPORT_PATH: ${{ github.workspace }}/.artifacts2/coveragereports/
+      ARTIFACTS_PATH: ${{ github.workspace }}/.artifacts/
+      BINLOG_PATH: ${{ github.workspace }}/.artifacts/binlogs/
+      TESTRESULTS_PATH: ${{ github.workspace }}/.artifacts/testresults/
+      COVERAGEREPORT_PATH: ${{ github.workspace }}/.artifacts/coveragereports/
 
     steps:
       - uses: actions/checkout@v6
@@ -59,7 +59,8 @@ jobs:
       - name: 🧪 Test
         id: test
         run: dotnet test --configuration ${{ inputs.configuration }} --no-build -bl:${{ env.BINLOG_PATH }}/test.binlog --output Detailed --results-directory ${{ env.TESTRESULTS_PATH }}
-
+        env:
+          ArtifactsPath: ${{ env.ARTIFACTS_PATH }}
 
       - name: 📄 Publish test results
         uses: dorny/test-reporter@v2
