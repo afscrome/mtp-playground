@@ -33,6 +33,11 @@ jobs:
       TESTRESULTS_PATH: ${{ github.workspace }}/.artifacts/testresults/
       COVERAGEREPORT_PATH: ${{ github.workspace }}/.artifacts/coveragereports/
       NUGET_XMLDOC_MODE: skip
+      DOTNET_NOLOGO: true
+      DOTNET_CLI_TELEMETRY_OPTOUT: true
+      DOTNET_SYSTEM_CONSOLE_ALLOW_ANSI_COLOR_REDIRECTION: true
+      TERM: xterm
+
 
     steps:
       - uses: actions/checkout@v6
@@ -47,16 +52,15 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ~/.nuget/packages
-          key: ${{ runner.os }}-nuget-${{ hashFiles('global.json', '**/*.props', '**/*.targets', '**/*.csproj') }}
-          restore-keys: |
-            ${{ runner.os }}-nuget-
+          key: ${{ runner.os }}-nuget-${{ hashFiles('global.json', '**/*.props', '**/*.targets', '**/*.csproj') }}          
 
       - name: 📥 Restore dependencies
         id: restore
         run: |
           dotnet restore \
             --artifacts-path ${{ env.ARTIFACTS_PATH }} \
-            -p:Version=${{ inputs.version }} \
+            --property:Version=${{ inputs.version }} \
+            --verbosity:minimal \
             -bl:${{ env.BINLOG_PATH }}/restore.binlog
 
       - name: 🏗️ Build
@@ -65,7 +69,8 @@ jobs:
           dotnet build \
             --no-restore \
             --configuration ${{ inputs.configuration }} \
-            -p:Version=${{ inputs.version }} \
+            --property:Version=${{ inputs.version }} \
+            --verbosity:minimal \
             --artifacts-path ${{ env.ARTIFACTS_PATH }} \
             -bl:${{ env.BINLOG_PATH }}/build.binlog
 
@@ -75,8 +80,9 @@ jobs:
           dotnet test \
             --no-build \
             --configuration ${{ inputs.configuration }} \
-            -p:Version=${{ inputs.version }} \
-            --p:ArtifactsPath=${{ env.ARTIFACTS_PATH }} \
+            --property:Version=${{ inputs.version }} \
+            --verbosity:minimal \
+            --property:ArtifactsPath=${{ env.ARTIFACTS_PATH }} \
             -bl:${{ env.BINLOG_PATH }}/test.binlog \
             --output Detailed \
             --results-directory ${{ env.TESTRESULTS_PATH }}
