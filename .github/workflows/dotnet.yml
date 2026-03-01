@@ -50,15 +50,30 @@ jobs:
 
       - name: 📥 Restore dependencies
         id: restore
-        run: dotnet restore --artifacts-path ${{ env.ARTIFACTS_PATH }} -bl:${{ env.BINLOG_PATH }}/restore.binlog
+        run: |
+          dotnet restore \
+            --artifacts-path ${{ env.ARTIFACTS_PATH }} \
+            -bl:${{ env.BINLOG_PATH }}/restore.binlog
 
       - name: 🏗️ Build
         id: build
-        run: dotnet build --configuration ${{ inputs.configuration }} --no-restore --artifacts-path ${{ env.ARTIFACTS_PATH }} -bl:${{ env.BINLOG_PATH }}/build.binlog
+        run: |
+          dotnet build \
+            --configuration ${{ inputs.configuration }} \
+            --no-restore \
+            --artifacts-path ${{ env.ARTIFACTS_PATH }} \
+            -bl:${{ env.BINLOG_PATH }}/build.binlog
 
       - name: 🧪 Test
         id: test
-        run: dotnet test --configuration ${{ inputs.configuration }} --no-build --p:ArtifactsPath=${{ env.ARTIFACTS_PATH }} -bl:${{ env.BINLOG_PATH }}/test.binlog --output Detailed --results-directory ${{ env.TESTRESULTS_PATH }}
+        run: |
+          dotnet test \
+            --configuration ${{ inputs.configuration }} \
+            --no-build \
+            --p:ArtifactsPath=${{ env.ARTIFACTS_PATH }} \
+            -bl:${{ env.BINLOG_PATH }}/test.binlog \
+            --output Detailed \
+            --results-directory ${{ env.TESTRESULTS_PATH }}
 
       - name: 📄 Publish test results
         uses: dorny/test-reporter@v2
