@@ -114,20 +114,20 @@ jobs:
   
       - name: 📤 Publish code coverage results
         if: ${{ steps.reportgenerator.outcome == 'success' }}      
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: CoverageReport-${{ github.job }}
           path: ${{ env.COVERAGEREPORT_PATH }}         
 
       - name: 📤 Publish binlogs (on failure)
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         if: ${{ steps.restore.outcome == 'failure' || steps.build.outcome == 'failure' || steps.test.outcome == 'failure' || runner.debug }}
         with:
           name: Binlogs-${{ github.job }}
           path: ${{ env.BINLOG_PATH }}
 
       - name: 📤 Publish test artifacts (on failure)
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         if: ${{ steps.test.outcome == 'failure' || runner.debug }}
         with:
           name: TestResults-${{ github.job }}
