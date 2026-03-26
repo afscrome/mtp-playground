@@ -91,7 +91,7 @@ jobs:
             --results-directory ${{ env.TESTRESULTS_PATH }}
 
       - name: 📄 Publish test results
-        uses: dorny/test-reporter@v2
+        uses: dorny/test-reporter@v3
         if: ${{ !cancelled() && steps.test.outcome != 'skipped' }}
         with:
           name: Test Results
